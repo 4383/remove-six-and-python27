@@ -1,13 +1,18 @@
 import ast
+from enum import Enum
 import os
 from collections import namedtuple
 
 from sixectomy.common import python_files
 from sixectomy.exceptions import SixectomyException
 
-Import = namedtuple("Import", ["module", "name", "alias"])
-Class = namedtuple("Class", ["node", "name", "methods"])
+Import = namedtuple("Import", ["module", "name", "alias", "typeof"])
 Method = namedtuple("Method", ["node", "name", "docstring"])
+
+
+class TypeOfImport(Enum):
+    DIRECT=1,
+    FROM=2
 
 
 def get_functions(root):
@@ -18,20 +23,6 @@ def get_functions(root):
     return funcs
 
 
-class Classes(list):
-    def __init__(self, root):
-        """Initialize list of classes."""
-        super(Classes, self).__init__()
-        for node in ast.iter_child_nodes(root):
-            if isinstance(node, ast.ClassDef):
-                meths = get_functions(node)
-                self.append(Class(node, node.name, meths))
-
-    def __str__(self):
-        """Textual representation of classes."""
-        return "\n".join([el.name for el in self])
-
-
 class Imports(list):
     def __init__(self, root):
         """Initialize list of imports."""
@@ -39,13 +30,15 @@ class Imports(list):
         for node in ast.iter_child_nodes(root):
             if isinstance(node, ast.Import):
                 module = []
+                typeof = TypeOfImport.DIRECT
             elif isinstance(node, ast.ImportFrom):
                 module = node.module
+                typeof = TypeOfImport.FROM
             else:
                 continue
 
             for name in node.names:
-                self.append(Import(module, name.name, name.asname))
+                self.append(Import(module, name.name, name.asname, typeof))
 
     def __str__(self):
         """Textual representation of imports."""
@@ -68,7 +61,19 @@ class Module:
                 "Invalid python file {filename}".format(filename=self.name)
             )
         self.imports = Imports(self.root)
-        self.classes = Classes(self.root)
+
+    def get_six_imports(self):
+        for imp in self.imports:
+            if 'six' != imp.name and 'six' != imp.module:
+                continue
+            yield imp
+
+    def is_using_six(self):
+        for imp in self.imports:
+            if 'six' != imp.name and 'six' != imp.module:
+                continue
+            return True
+        return False
 
     def __str__(self):
         """Textual representation of module."""
@@ -80,7 +85,7 @@ class Analyze(object):
 
     modules = []
     imports = 0
-    classes = 0
+    modules_using_six = 0
 
     def __init__(self, path):
         """To initalize the analyze class.
@@ -99,15 +104,16 @@ class Analyze(object):
                     current_module = Module(pyfile)
                     self.modules.append(current_module)
         else:
-            raise SixectomyException("Path not found: {path}".format(
-                                     path=path))
+            raise SixectomyException(
+                "Path not found: {path}".format(path=path)
+            )
         self._count_imports()
-        self._count_classes()
+        self._count_six_usages()
 
     def _count_imports(self):
         for module in self.modules:
             self.imports += len(module.imports)
 
-    def _count_classes(self):
+    def _count_six_usages(self):
         for module in self.modules:
-            self.classes += len(module.classes)
+            self.modules_using_six += 1 if module.is_using_six else 0

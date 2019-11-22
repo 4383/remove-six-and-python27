@@ -4,7 +4,7 @@ import sys
 import tempfile
 import unittest
 
-from sample import sample
+import samples
 
 from sixectomy.models import Analyze
 from sixectomy.reports import Report
@@ -14,7 +14,7 @@ class TestReport(unittest.TestCase):
     def setUp(self):
         with tempfile.TemporaryDirectory() as tmpdir:
             with open("{dir}/test.py".format(dir=tmpdir), "w+") as fake:
-                fake.write(sample)
+                fake.write(samples.sample)
 
             self.tmpdir = tmpdir
             self.analyze = Analyze(tmpdir)
