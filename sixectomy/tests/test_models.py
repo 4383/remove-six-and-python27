@@ -194,16 +194,11 @@ class TestAnalyze(unittest.TestCase):
             len(self.analyze.modules[0].imports), self.imports_number
         )
 
-    def test_count_total_modules_using_six(self):
+    def test_count_total_number_of_usages(self):
         # here all the given fake python modules using six
         # so we have as many modules as modules using six
         self.assertEqual(
-            self.get_expected_modules_len(), self.analyze.modules_using_six
-        )
-
-    def test_modules_total_imports(self):
-        self.assertEqual(
-            self.analyze.imports, self.get_expected_total_imports()
+            self.get_expected_modules_len(), self.analyze.number_of_usages
         )
 
     def test_analyze_on_single_file(self):

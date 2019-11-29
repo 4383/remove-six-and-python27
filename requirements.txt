@@ -1,2 +1,9 @@
 pbr
-Jinja2==2.10.1
+# Install pip to use it for introspection and avoid to
+# maintain a compatibility matrix.
+# In other words sixectomy will load dynamically from the latest
+# version of six, the matrix which will allow us to replace things
+# in an automated way.
+# We don't want to pin the six version number to also be sure
+# to pull the latest stable version and the latest stable matrix.
+six

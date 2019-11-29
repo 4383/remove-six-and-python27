@@ -28,10 +28,11 @@ def argparser():
         default=os.getcwd(),
     )
     parser.add_argument(
-        "-s",
-        "--summarize",
-        action="store_true",
-        help="If display a summary of the analyze",
+        "-t",
+        "--report-type",
+        choices=["simple", "advanced"],
+        default="simple",
+        help="Type of report to display",
     )
     parser.add_argument(
         "-V",

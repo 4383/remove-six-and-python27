@@ -23,6 +23,14 @@ def get_functions(root):
     return funcs
 
 
+def is_six_import(imp):
+    if isinstance(imp.module, list):
+        return 'six' == imp.name
+    return 'six' == imp.name or \
+           'six' == imp.module or \
+           imp.module.startswith('six.')
+
+
 class Imports(list):
     def __init__(self, root):
         """Initialize list of imports."""
@@ -40,12 +48,13 @@ class Imports(list):
             for name in node.names:
                 self.append(Import(module, name.name, name.asname, typeof))
 
-    def __str__(self):
-        """Textual representation of imports."""
-        return "\n".join([el.name for el in self])
+    def get_six(self):
+        return [imp for imp in self if is_six_import(imp)]
 
 
 class Module:
+    count_import_usages = 0
+
     def __init__(self, path):
         """To initalize the analyze class.
 
@@ -61,12 +70,10 @@ class Module:
                 "Invalid python file {filename}".format(filename=self.name)
             )
         self.imports = Imports(self.root)
+        self._number_of_six_imports()
 
-    def get_six_imports(self):
-        for imp in self.imports:
-            if 'six' != imp.name and 'six' != imp.module:
-                continue
-            yield imp
+    def tree(self):
+        return ast.iter_child_nodes(self.root)
 
     def is_using_six(self):
         for imp in self.imports:
@@ -74,6 +81,9 @@ class Module:
                 continue
             return True
         return False
+
+    def _number_of_six_imports(self):
+        self.count_import_usages = len(self.imports.get_six())
 
     def __str__(self):
         """Textual representation of module."""
@@ -83,9 +93,10 @@ class Module:
 class Analyze(object):
     """To analyze the file."""
 
+    path = None
     modules = []
-    imports = 0
-    modules_using_six = 0
+    number_of_total_modules = 0
+    number_of_usages = 0
 
     def __init__(self, path):
         """To initalize the analyze class.
@@ -107,13 +118,22 @@ class Analyze(object):
             raise SixectomyException(
                 "Path not found: {path}".format(path=path)
             )
-        self._count_imports()
         self._count_six_usages()
+        self._count_number_of_total_modules()
 
-    def _count_imports(self):
-        for module in self.modules:
-            self.imports += len(module.imports)
+    def is_positive(self):
+        """
+        Do the analyze is positive?
+        Do we found six occurences during analyze?
+        """
+        return self.number_of_usages > 0
+
+    def _count_number_of_total_modules(self):
+        self.number_of_total_modules = len(self.modules)
 
     def _count_six_usages(self):
+        """
+        How many modules in the analyze using six?
+        """
         for module in self.modules:
-            self.modules_using_six += 1 if module.is_using_six else 0
+            self.number_of_usages += 1 if module.is_using_six() else 0
