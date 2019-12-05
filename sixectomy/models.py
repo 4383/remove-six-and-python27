@@ -1,26 +1,38 @@
 import ast
-from enum import Enum
-import os
 from collections import namedtuple
+from enum import Enum
+import io
+import os
+import tokenize
 
+import sixectomy.exceptions as sixexcept
 from sixectomy.common import python_files
-from sixectomy.exceptions import SixectomyException
 
 Import = namedtuple("Import", ["module", "name", "alias", "typeof"])
 Method = namedtuple("Method", ["node", "name", "docstring"])
 
 
+class ModuleReader:
+    content = None
+    encoding = None
+
+    def __init__(self, path):
+        self.path = path
+
+    def read(self):
+        with open(self.path, 'r') as content:
+            self.content = content.read()
+            return self.content
+
+    def bread(self):
+        if not self.content:
+            self.read()
+        return io.BytesIO(self.content.encode('utf-8'))
+
+
 class TypeOfImport(Enum):
     DIRECT=1,
     FROM=2
-
-
-def get_functions(root):
-    funcs = []
-    for node in ast.iter_child_nodes(root):
-        if isinstance(node, ast.FunctionDef):
-            funcs.append(Method(node, node.name, ast.get_docstring(node)))
-    return funcs
 
 
 def is_six_import(imp):
@@ -31,22 +43,27 @@ def is_six_import(imp):
            imp.module.startswith('six.')
 
 
+def parse_import(node):
+    if isinstance(node, ast.Import):
+        return [], TypeOfImport.DIRECT
+    elif isinstance(node, ast.ImportFrom):
+        return node.module, TypeOfImport.FROM
+    else:
+        raise sixexcept.SixectomyImportException(f"Not an import ({node})")
+
+
 class Imports(list):
     def __init__(self, root):
         """Initialize list of imports."""
         super(Imports, self).__init__()
         for node in ast.iter_child_nodes(root):
-            if isinstance(node, ast.Import):
-                module = []
-                typeof = TypeOfImport.DIRECT
-            elif isinstance(node, ast.ImportFrom):
-                module = node.module
-                typeof = TypeOfImport.FROM
-            else:
+            try:
+                module, typeof = parse_import(node)
+            except sixexcept.SixectomyImportException:
                 continue
-
-            for name in node.names:
-                self.append(Import(module, name.name, name.asname, typeof))
+            else:
+                for name in node.names:
+                    self.append(Import(module, name.name, name.asname, typeof))
 
     def get_six(self):
         return [imp for imp in self if is_six_import(imp)]
@@ -54,6 +71,10 @@ class Imports(list):
 
 class Module:
     count_import_usages = 0
+    root = None
+    name = None
+    path = None
+    tokens = None
 
     def __init__(self, path):
         """To initalize the analyze class.
@@ -62,15 +83,21 @@ class Module:
         @type path: str
         """
         self.path = path
-        self.name = path.name
+        self.name = os.path.basename(path)
+        self.module_reader = ModuleReader(self.path)
         try:
-            self.root = ast.parse(self.path.read())
+            self.root = ast.parse(self.module_reader.read())
         except SyntaxError:
-            raise SixectomyException(
-                "Invalid python file {filename}".format(filename=self.name)
-            )
+            raise sixexcept.SixectomyException(
+                f"Invalid python file {self.name}")
         self.imports = Imports(self.root)
         self._number_of_six_imports()
+        if self.is_using_six():
+            self.tokenizer()
+
+    def tokenizer(self):
+        bcontent = self.module_reader.bread()
+        self.tokens = tokenize.tokenize(bcontent.readline)
 
     def tree(self):
         return ast.iter_child_nodes(self.root)
@@ -107,17 +134,12 @@ class Analyze(object):
         self.path = path
         self.modules = []
         if os.path.isfile(self.path):
-            with open(self.path, "r") as pyfile:
-                self.modules.append(Module(pyfile))
+            self.modules.append(Module(self.path))
         elif os.path.isdir(self.path):
             for module in python_files(self.path):
-                with open(module, "r") as pyfile:
-                    current_module = Module(pyfile)
-                    self.modules.append(current_module)
+                self.modules.append(Module(module))
         else:
-            raise SixectomyException(
-                "Path not found: {path}".format(path=path)
-            )
+            raise sixexcept.SixectomyException(f"Path not found: {path}")
         self._count_six_usages()
         self._count_number_of_total_modules()
 

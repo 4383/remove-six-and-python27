@@ -14,7 +14,7 @@ class TestReport(unittest.TestCase):
     def setUp(self):
         with tempfile.TemporaryDirectory() as tmpdir:
             with open("{dir}/test.py".format(dir=tmpdir), "w+") as fake:
-                fake.write(samples.sample)
+                fake.write(samples.codes.with_six)
 
             self.tmpdir = tmpdir
             self.analyze = Analyze(tmpdir)

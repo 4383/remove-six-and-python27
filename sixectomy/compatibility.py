@@ -1,8 +1,21 @@
+import sys
+
 import six
 
-compat = six._moved_attributes + \
-         six._urllib_parse_moved_attributes + \
-         six._urllib_error_moved_attributes + \
-         six._urllib_request_moved_attributes + \
-         six._urllib_response_moved_attributes + \
-         six._urllib_robotparser_moved_attributes
+
+class Compatibility(list):
+
+    def __init__(self):
+        self.get_base()
+        self.get_moved_modules()
+        print(self)
+
+    def get_base(self):
+        for el in dir(six):
+            if el.startswith("_"):
+                continue
+            self.append(f'six.{el}')
+
+    def get_moved_modules(self):
+        for el in six._importer.known_modules.keys():
+            self.append(el)

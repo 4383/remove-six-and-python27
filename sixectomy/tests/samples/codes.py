@@ -1,6 +1,7 @@
 import textwrap
 
-sample = """
+
+with_six = """
 import requests
 import abc
 import six
@@ -22,18 +23,7 @@ class Foo:
     pass
 """
 
-samples = [
-    textwrap.dedent("""
-        import six
-        print(six.string_types("baz"))
-    """),
-    textwrap.dedent("""
-        import six import string_types
-        print(string_types("baz"))
-    """),
-]
-
-sample_without_six = """
+without_six = """
 import requests
 import abc
 from foo import bar
