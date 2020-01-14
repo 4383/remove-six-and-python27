@@ -1,5 +1,5 @@
-from sys import exit
-from sys import version_info
+import sys
+import warnings
 
 from pbr.version import VersionInfo
 
@@ -11,7 +11,7 @@ from sixectomy.reports import Report
 
 
 def main():
-    if version_info[0] < 3:
+    if sys.version_info[0] < 3:
         print("Sixectomy must be run in a python 3 environment")
         sys.exit(125)
     args = cli.argparser().parse_args()
@@ -19,22 +19,21 @@ def main():
     if args.version:
         print("sixectomy v{version}".format(version=version))
         return 0
-    filename = args.file
-    if not filename:
-        return 0
 
     try:
-        analyze = Analyze(filename)
+        analyze = Analyze(args.file)
     except SixectomyException as err:
-        print(str(err))
+        warnings.warn(str(err))
         return 1
     else:
-        report = Report(analyze, report_type=args.report_type)
-        report.rendering()
         surgerer = surgery.Operating(analyze)
         surgerer.act()
+        if args.in_place:
+            save(analyze, args.suffix)
+        report = Report(analyze, report_type=args.report_type)
+        report.rendering()
     return 0
 
 
 if __name__ == "__main__":
-    exit(main())
+    sys.exit(main())

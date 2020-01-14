@@ -7,3 +7,4 @@ pbr
 # We don't want to pin the six version number to also be sure
 # to pull the latest stable version and the latest stable matrix.
 six
+pep8

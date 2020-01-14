@@ -9,7 +9,7 @@ from sixectomy.common import is_valid_path
 EPILOG = textwrap.dedent("""
     Exit status:
     - 0 if ok
-    - 1 if something classical went wrong
+    - 1 if something classical went wrong (e.g wrong params, etc)
     - 404 if a mapping is not found
     - 500 if engine fail during replacement
 

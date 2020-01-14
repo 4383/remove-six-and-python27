@@ -120,8 +120,8 @@ class TestModules(unittest.TestCase):
         self.assertEqual(self.module.is_using_six(), True)
 
     def test_tokenizer(self):
-        self.assertTrue(isinstance(self.module.tokens, types.GeneratorType))
-        content = [str(el) for el in self.module.tokens]
+        self.assertTrue(isinstance(self.module.before, types.GeneratorType))
+        content = [str(el) for el in self.module.before]
         for el in content:
             self.assertTrue('TokenInfo' in el)
 
@@ -155,7 +155,7 @@ class TestModulesWithoutSix(unittest.TestCase):
         self.assertEqual(self.module.is_using_six(), False)
 
     def test_tokenizer(self):
-        self.assertTrue(self.module.tokens is None)
+        self.assertTrue(self.module.before is None)
 
 
 class TestAnalyze(unittest.TestCase):

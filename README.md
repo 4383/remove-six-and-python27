@@ -32,8 +32,17 @@ and unexecutable python code after replacements.
 As a safety measure, Sixectomy will check that the reformatted code
 still produces a valid AST that is equivalent to the original.
 
-Also, you can only either simulate a removing or simply list six usage in your
-project.
+If your project code is PEP8 compliant sixectomy will also check that the
+refactored code is still compliant with PEP8. sixectomy will keep the right
+order for your imports and will ensure that linters are still happy after
+a refactor.
+
+If the `--in-place` param is not given than sixectomy will only simulate a
+removing on your project, in other words no changes will be applied.
+
+For sake of efficency Sixectomy is only focused on files where six usages are
+detected, don't wait that sixectmy will PEP8 refactor other modules
+from your code.
 
 ## When and why using Sixectomy
 
@@ -65,6 +74,13 @@ If you give a path at the CLI then sixectomy will inspect the given path:
 ```sh
 $ sixectomy ~/<path-of-your-project>/
 ```
+
+For further info about options and usages take a tour to the help:
+
+```sh
+$ sixectomy -h
+```
+
 ## Contribute
 
 If you want to contribute to niet [please first read the contribution guidelines](CONTRIBUTING.md)

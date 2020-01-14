@@ -84,6 +84,7 @@ class Operating:
 
     def act(self):
         for module in self.analyze.modules:
+            module.prepare_the_refactor()
             if not module.is_using_six():
                 continue
 
@@ -96,11 +97,10 @@ class Surgerer:
         self.module = module
 
     def surgery(self):
-        for node in self.module.tree():
+        for node in self.module.get_tree():
             try:
                 tools = SurgererTools(node)
                 tools.examine()
             except SixectomyException as ex:
                 print(ex)
                 continue
-

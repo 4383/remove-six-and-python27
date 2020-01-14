@@ -32,6 +32,16 @@ class Report(metaclass=abc.ABCMeta):
         return False
 
 
+def pluralize(singular, number, plural=None, endofword="s"):
+    try:
+        if int(number) > 1:
+            return plural if plural else f'{singular}{endofword}'
+    except ValueError:
+        pass
+    else:
+        return singular
+
+
 class SimpleReport(Report):
 
     def rendering(self):
@@ -41,9 +51,10 @@ class SimpleReport(Report):
         print(f'Number of modules using six: {self.analyze.number_of_usages}')
         print('')
         print('List of modules using six:')
-        print('\n'.join([f'{mod}: imports: {mod.count_import_usages}' \
-                         for mod in self.analyze.modules \
-                         if mod.is_using_six()]))
+        print('\n'.join(
+              [f'- {mod} ({mod.count_import_usages} detected)' \
+              for mod in self.analyze.modules \
+              if mod.is_using_six()]))
 
 
 class AdvancedReport(Report):
