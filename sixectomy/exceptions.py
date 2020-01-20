@@ -3,3 +3,6 @@ class SixectomyException(Exception):
 
 class SixectomyImportException(Exception):
     pass
+
+class SixectomyCompatibilityNotFound(Exception):
+    pass

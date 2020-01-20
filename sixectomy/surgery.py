@@ -1,6 +1,7 @@
 import abc
 import ast
 
+from sixectomy.compatibility import Compatibility
 from sixectomy.exceptions import SixectomyException
 
 
@@ -83,18 +84,22 @@ class Operating:
         self.analyze = analyze
 
     def act(self):
+        compatibility = Compatibility()
         for module in self.analyze.modules:
             module.prepare_the_refactor()
             if not module.is_using_six():
                 continue
 
-            surgerer = Surgerer(module)
+            surgerer = Surgerer(module, compatibility)
             surgerer.surgery()
 
 class Surgerer:
 
-    def __init__(self, module):
+    def __init__(self, module, compatibility):
         self.module = module
+        self.compatibility = compatibility
+        #print(compatibility)
+        print(compatibility.resolve("six.moves.urllib.parse"))
 
     def surgery(self):
         for node in self.module.get_tree():

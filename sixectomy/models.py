@@ -106,7 +106,7 @@ class Module:
         self._number_of_six_imports()
         if self.is_using_six():
             self._tokenizer()
-            self.before['is_using_six'] = is_pep8_valid(self.path)
+            self.before['is_pep8_valid'] = is_pep8_valid(self.path)
 
     def prepare_the_refactor(self):
         self.after = copy.deepcopy(self.before)
