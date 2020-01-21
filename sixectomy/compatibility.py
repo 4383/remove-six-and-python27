@@ -1,8 +1,24 @@
+import re
 import sys
 
 import six
 
-from sixectomy.exceptions import SixectomyCompatibilityNotFound
+from sixectomy.exceptions import SixectomyCompatibilityException
+
+
+def parse_line(line):
+    # To more merely understand the following regex
+    # please take a look to https://regex101.com/r/yPiWr3/1
+    search = r'Moved\w+([\("_a-zA-Z,\s.+\(\)<=>1-9]*),'
+    match = re.match(search, line)
+    # order is important match can be equal to None so he need
+    # to be tested first to exit the and condition if is None
+    # if match is None the groups attribut doesn't exist and it will raise
+    # an exception
+    if match and match.groups():
+        return match.group(1)
+    raise SixectomyCompatibilityException(
+        f"No pattern match with line ({line})")
 
 
 class Compatibility(list):
@@ -21,9 +37,12 @@ class Compatibility(list):
     def _read_six_sources(self):
         with open(six.__file__) as sixfile:
             for line in sixfile.readlines():
-                if "MovedModule" not in line and "MovedAttribute" not in line:
+                line = line.strip()
+                if not line.startswith("MovedModule(") and \
+                   not line.startswith("MovedAttribute("):
                     continue
                 self._sources.append(line)
+
 
     def _get_base(self):
         for el in dir(six):
