@@ -117,6 +117,122 @@ lines = [
     'MovedAttribute("AbstractBasicAuthHandler", "urllib2", "urllib.request"),\n',  # noqa
     'MovedAttribute("HTTPBasicAuthHandler", "urllib2", "urllib.request"),\n',
 ]
+
+expected_types = [
+    'MovedAttribute',
+    'MovedAttribute',
+    'MovedAttribute',
+    'MovedAttribute',
+    'MovedAttribute',
+    'MovedAttribute',
+    'MovedAttribute',
+    'MovedAttribute',
+    'MovedAttribute',
+    'MovedAttribute',
+    'MovedAttribute',
+    'MovedAttribute',
+    'MovedAttribute',
+    'MovedAttribute',
+    'MovedAttribute',
+    'MovedAttribute',
+    'MovedAttribute',
+    'MovedAttribute',
+    'MovedAttribute',
+    'MovedAttribute',
+    'MovedModule',
+    'MovedModule',
+    'MovedModule',
+    'MovedModule',
+    'MovedModule',
+    'MovedModule',
+    'MovedModule',
+    'MovedModule',
+    'MovedModule',
+    'MovedModule',
+    'MovedModule',
+    'MovedModule',
+    'MovedModule',
+    'MovedModule',
+    'MovedModule',
+    'MovedModule',
+    'MovedModule',
+    'MovedModule',
+    'MovedModule',
+    'MovedModule',
+    'MovedModule',
+    'MovedModule',
+    'MovedModule',
+    'MovedModule',
+    'MovedModule',
+    'MovedModule',
+    'MovedModule',
+    'MovedModule',
+    'MovedModule',
+    'MovedModule',
+    'MovedModule',
+    'MovedModule',
+    'MovedModule',
+    'MovedModule',
+    'MovedModule',
+    'MovedModule',
+    'MovedModule',
+    'MovedModule',
+    'MovedModule',
+    'MovedModule',
+    'MovedModule',
+    'MovedModule',
+    'MovedModule',
+    'MovedModule',
+    'MovedModule',
+    'MovedModule',
+    'MovedModule',
+    'MovedAttribute',
+    'MovedAttribute',
+    'MovedAttribute',
+    'MovedAttribute',
+    'MovedAttribute',
+    'MovedAttribute',
+    'MovedAttribute',
+    'MovedAttribute',
+    'MovedAttribute',
+    'MovedAttribute',
+    'MovedAttribute',
+    'MovedAttribute',
+    'MovedAttribute',
+    'MovedAttribute',
+    'MovedAttribute',
+    'MovedAttribute',
+    'MovedAttribute',
+    'MovedAttribute',
+    'MovedAttribute',
+    'MovedAttribute',
+    'MovedAttribute',
+    'MovedAttribute',
+    'MovedAttribute',
+    'MovedAttribute',
+    'MovedAttribute',
+    'MovedAttribute',
+    'MovedAttribute',
+    'MovedAttribute',
+    'MovedAttribute',
+    'MovedAttribute',
+    'MovedAttribute',
+    'MovedAttribute',
+    'MovedAttribute',
+    'MovedAttribute',
+    'MovedAttribute',
+    'MovedAttribute',
+    'MovedAttribute',
+    'MovedAttribute',
+    'MovedAttribute',
+    'MovedAttribute',
+    'MovedAttribute',
+    'MovedAttribute',
+    'MovedAttribute',
+    'MovedAttribute',
+    'MovedAttribute',
+]
+
 expected_extract = [
     '("cStringIO", "cStringIO", "io", "StringIO")',
     '("filter", "itertools", "builtins", "ifilter", "filter")',
@@ -140,7 +256,7 @@ expected_extract = [
     '("zip_longest", "itertools", "itertools", "izip_longest", "zip_longest")',
     '("builtins", "__builtin__")',
     '("configparser", "ConfigParser")',
-    '("collections_abc", "collections", "collections.abc" if sys.version_info >= (3, 3) else "collections")',
+    '("collections_abc", "collections", "collections.abc" if sys.version_info >= (3, 3) else "collections")',  # noqa
     '("copyreg", "copy_reg")',
     '("dbm_gnu", "gdbm", "dbm.gnu")',
     '("dbm_ndbm", "dbm", "dbm.ndbm")',
@@ -232,6 +348,121 @@ expected_extract = [
     '("HTTPBasicAuthHandler", "urllib2", "urllib.request")',
 ]
 
+expected_evals = [
+    ("cStringIO", "cStringIO", "io", "StringIO"),
+    ("filter", "itertools", "builtins", "ifilter", "filter"),
+    ("filterfalse", "itertools", "itertools", "ifilterfalse", "filterfalse"),
+    ("input", "__builtin__", "builtins", "raw_input", "input"),
+    ("intern", "__builtin__", "sys"),
+    ("map", "itertools", "builtins", "imap", "map"),
+    ("getcwd", "os", "os", "getcwdu", "getcwd"),
+    ("getcwdb", "os", "os", "getcwd", "getcwdb"),
+    ("getoutput", "commands", "subprocess"),
+    ("range", "__builtin__", "builtins", "xrange", "range"),
+    ("reload_module", "__builtin__", "importlib", "reload"),
+    ("reduce", "__builtin__", "functools"),
+    ("shlex_quote", "pipes", "shlex", "quote"),
+    ("StringIO", "StringIO", "io"),
+    ("UserDict", "UserDict", "collections"),
+    ("UserList", "UserList", "collections"),
+    ("UserString", "UserString", "collections"),
+    ("xrange", "__builtin__", "builtins", "xrange", "range"),
+    ("zip", "itertools", "builtins", "izip", "zip"),
+    ("zip_longest", "itertools", "itertools", "izip_longest", "zip_longest"),
+    ("builtins", "__builtin__"),
+    ("configparser", "ConfigParser"),
+    ("collections_abc", "collections", "collections.abc"),
+    ("copyreg", "copy_reg"),
+    ("dbm_gnu", "gdbm", "dbm.gnu"),
+    ("dbm_ndbm", "dbm", "dbm.ndbm"),
+    ("_dummy_thread", "dummy_thread", "_dummy_thread"),
+    ("http_cookiejar", "cookielib", "http.cookiejar"),
+    ("http_cookies", "Cookie", "http.cookies"),
+    ("html_entities", "htmlentitydefs", "html.entities"),
+    ("html_parser", "HTMLParser", "html.parser"),
+    ("http_client", "httplib", "http.client"),
+    ("email_mime_base", "email.MIMEBase", "email.mime.base"),
+    ("email_mime_image", "email.MIMEImage", "email.mime.image"),
+    ("email_mime_multipart", "email.MIMEMultipart", "email.mime.multipart"),
+    ("email_mime_nonmultipart", "email.MIMENonMultipart", "email.mime.nonmultipart"),  # noqa
+    ("email_mime_text", "email.MIMEText", "email.mime.text"),
+    ("BaseHTTPServer", "BaseHTTPServer", "http.server"),
+    ("CGIHTTPServer", "CGIHTTPServer", "http.server"),
+    ("SimpleHTTPServer", "SimpleHTTPServer", "http.server"),
+    ("cPickle", "cPickle", "pickle"),
+    ("queue", "Queue"),
+    ("reprlib", "repr"),
+    ("socketserver", "SocketServer"),
+    ("_thread", "thread", "_thread"),
+    ("tkinter", "Tkinter"),
+    ("tkinter_dialog", "Dialog", "tkinter.dialog"),
+    ("tkinter_filedialog", "FileDialog", "tkinter.filedialog"),
+    ("tkinter_scrolledtext", "ScrolledText", "tkinter.scrolledtext"),
+    ("tkinter_simpledialog", "SimpleDialog", "tkinter.simpledialog"),
+    ("tkinter_tix", "Tix", "tkinter.tix"),
+    ("tkinter_ttk", "ttk", "tkinter.ttk"),
+    ("tkinter_constants", "Tkconstants", "tkinter.constants"),
+    ("tkinter_dnd", "Tkdnd", "tkinter.dnd"),
+    ("tkinter_colorchooser", "tkColorChooser", "tkinter.colorchooser"),
+    ("tkinter_commondialog", "tkCommonDialog", "tkinter.commondialog"),
+    ("tkinter_tkfiledialog", "tkFileDialog", "tkinter.filedialog"),
+    ("tkinter_font", "tkFont", "tkinter.font"),
+    ("tkinter_messagebox", "tkMessageBox", "tkinter.messagebox"),
+    ("tkinter_tksimpledialog", "tkSimpleDialog", "tkinter.simpledialog"),
+    ("urllib_parse", "six.moves.urllib_parse", "urllib.parse"),
+    ("urllib_error", "six.moves.urllib_error", "urllib.error"),
+    ("urllib", "six.moves.urllib", "six.moves.urllib"),
+    ("urllib_robotparser", "robotparser", "urllib.robotparser"),
+    ("xmlrpc_client", "xmlrpclib", "xmlrpc.client"),
+    ("xmlrpc_server", "SimpleXMLRPCServer", "xmlrpc.server"),
+    ("winreg", "_winreg"),
+    ("ParseResult", "urlparse", "urllib.parse"),
+    ("SplitResult", "urlparse", "urllib.parse"),
+    ("parse_qs", "urlparse", "urllib.parse"),
+    ("parse_qsl", "urlparse", "urllib.parse"),
+    ("urldefrag", "urlparse", "urllib.parse"),
+    ("urljoin", "urlparse", "urllib.parse"),
+    ("urlparse", "urlparse", "urllib.parse"),
+    ("urlsplit", "urlparse", "urllib.parse"),
+    ("urlunparse", "urlparse", "urllib.parse"),
+    ("urlunsplit", "urlparse", "urllib.parse"),
+    ("quote", "urllib", "urllib.parse"),
+    ("quote_plus", "urllib", "urllib.parse"),
+    ("unquote", "urllib", "urllib.parse"),
+    ("unquote_plus", "urllib", "urllib.parse"),
+    ("unquote_to_bytes", "urllib", "urllib.parse", "unquote", "unquote_to_bytes"),  # noqa
+    ("urlencode", "urllib", "urllib.parse"),
+    ("splitquery", "urllib", "urllib.parse"),
+    ("splittag", "urllib", "urllib.parse"),
+    ("splituser", "urllib", "urllib.parse"),
+    ("splitvalue", "urllib", "urllib.parse"),
+    ("uses_fragment", "urlparse", "urllib.parse"),
+    ("uses_netloc", "urlparse", "urllib.parse"),
+    ("uses_params", "urlparse", "urllib.parse"),
+    ("uses_query", "urlparse", "urllib.parse"),
+    ("uses_relative", "urlparse", "urllib.parse"),
+    ("URLError", "urllib2", "urllib.error"),
+    ("HTTPError", "urllib2", "urllib.error"),
+    ("ContentTooShortError", "urllib", "urllib.error"),
+    ("urlopen", "urllib2", "urllib.request"),
+    ("install_opener", "urllib2", "urllib.request"),
+    ("build_opener", "urllib2", "urllib.request"),
+    ("pathname2url", "urllib", "urllib.request"),
+    ("url2pathname", "urllib", "urllib.request"),
+    ("getproxies", "urllib", "urllib.request"),
+    ("Request", "urllib2", "urllib.request"),
+    ("OpenerDirector", "urllib2", "urllib.request"),
+    ("HTTPDefaultErrorHandler", "urllib2", "urllib.request"),
+    ("HTTPRedirectHandler", "urllib2", "urllib.request"),
+    ("HTTPCookieProcessor", "urllib2", "urllib.request"),
+    ("ProxyHandler", "urllib2", "urllib.request"),
+    ("BaseHandler", "urllib2", "urllib.request"),
+    ("HTTPPasswordMgr", "urllib2", "urllib.request"),
+    ("HTTPPasswordMgrWithDefaultRealm", "urllib2", "urllib.request"),
+    ("AbstractBasicAuthHandler", "urllib2", "urllib.request"),
+    ("HTTPBasicAuthHandler", "urllib2", "urllib.request"),
+]
+
 
 class TestCompatibility(unittest.TestCase):
     def setUp(self):
@@ -242,27 +473,53 @@ class TestCompatibility(unittest.TestCase):
         self.assertTrue(isinstance(self.compat, list))
 
     def test_parse_line(self):
+        # Testing specific use cases just to be sure everything is ok
+        # before looping automatically over lot of test cases. also help
+        # to be focused on specific use cases and to develop the feature.
         given = 'MovedAttribute("cStringIO", "cStringIO", "io", "StringIO"),\n'
-        expected = '("cStringIO", "cStringIO", "io", "StringIO")'
-        self.assertEqual(compatibility.parse_line(given), expected)
+        expected_typeof = 'MovedAttribute'
+        expected_value = '("cStringIO", "cStringIO", "io", "StringIO")'
+        typeof, value = compatibility.parse_line(given)
+        self.assertEqual(typeof, expected_typeof)
+        self.assertEqual(value, expected_value)
 
         with self.assertRaises(exceptions.SixectomyCompatibilityException):
             compatibility.parse_line("boom")
 
-        # Testing specific use cases just to be sure everything is ok
-        # before looping automatically over lot of test cases.
         given = 'MovedAttribute("filter", "itertools", "builtins", "ifilter", "filter"),\n'  # noqa
-        expected = '("filter", "itertools", "builtins", "ifilter", "filter")'
-        self.assertEqual(compatibility.parse_line(given), expected)
+        expected_typeof = 'MovedAttribute'
+        expected_value = '("filter", "itertools", "builtins", "ifilter", "filter")'
+        typeof, value = compatibility.parse_line(given)
+        self.assertEqual(typeof, expected_typeof)
+        self.assertEqual(value, expected_value)
 
         given = 'MovedModule("collections_abc", "collections", "collections.abc" if sys.version_info >= (3, 3) else "collections"),\n'  # noqa
-        expected = '("collections_abc", "collections", "collections.abc" if sys.version_info >= (3, 3) else "collections")'  # noqa
-        self.assertEqual(compatibility.parse_line(given), expected)
+        expected_typeof = 'MovedModule'
+        expected_value = '("collections_abc", "collections", "collections.abc" if sys.version_info >= (3, 3) else "collections")'  # noqa
+        typeof, value = compatibility.parse_line(given)
+        self.assertEqual(typeof, expected_typeof)
+        self.assertEqual(value, expected_value)
 
+        # Testing all tests cases to ensure every use cases works fine.
         for index, line in enumerate(lines):
+            typeof, value = compatibility.parse_line(line)
+            self.assertEqual(typeof, expected_types[index])
+            self.assertEqual(value, expected_extract[index])
+
+    def test_eval_line(self):
+        # Testing specific use cases just to be sure everything is ok
+        # before looping automatically over lot of test cases. also help
+        # to be focused on specific use cases and to develop the feature.
+        given = '("collections_abc", "collections", "collections.abc" if sys.version_info >= (3, 3) else "collections")'  # noqa
+        expected = ("collections_abc", "collections", "collections.abc")
+        self.assertEqual(compatibility.eval_line(given), expected)
+
+        # Testing all tests cases to ensure every use cases works fine.
+        for index, line in enumerate(expected_extract):
             self.assertEqual(
-                compatibility.parse_line(line),
-                expected_extract[index])
+                compatibility.eval_line(line),
+                expected_evals[index]
+            )
 
     def test_read_six_sources(self):
         for line in self.compat._sources:
@@ -270,3 +527,73 @@ class TestCompatibility(unittest.TestCase):
                 line.startswith('MovedModule(') or \
                 line.startswith('MovedAttribute(')
             ))
+            # Check if call on MovedModule or MovedAttribute with multiple
+            # lines are well merged (line and line + 1)
+            # Example => https://github.com/benjaminp/six/blob/3a3db7510b33eb22c63ad94bc735a9032949249f/six.py#L290,L291  # noqa
+            self.assertTrue((
+                line[-2:] == '),' or \
+                line[-2:] == ')'
+            ))
+
+    def test_setup_binding(self):
+        for index, line in enumerate(expected_evals):
+            self.assertTrue(line[0] in self.compat._mapping)
+            self.assertEqual(
+                self.compat._mapping[line[0]]["type"],
+                expected_types[index])
+            self.assertEqual(self.compat._mapping[line[0]]["value"], line)
+
+    def test_lookup(self):
+        expected = {
+            "type": "MovedModule",
+            "value": ("collections_abc", "collections", "collections.abc")
+        }
+        self.assertEqual(self.compat.lookup("collections_abc"), expected)
+        expected = {
+            "type": "MovedModule",
+            "value": ("collections_abc", "collections", "collections.abc")
+        }
+        self.assertEqual(self.compat.lookup("six.collections_abc"), expected)
+        expected = {
+            "type": "MovedModule",
+            "value": ("collections_abc", "collections", "collections.abc")
+        }
+        self.assertEqual(
+            self.compat.lookup("six.moves.collections_abc"),
+            expected
+        )
+        with self.assertRaises(exceptions.SixectomyCompatibilityNotFound):
+            self.compat.lookup("six.moves.collectio_abc")
+        expected = {
+            "type": "MovedModule",
+            "value": ("urllib_parse", "six.moves.urllib_parse", "urllib.parse")
+        }
+        self.assertEqual(
+            self.compat.lookup("six.moves.urllib.parse"),
+            expected
+        )
+        expected = {
+            "type": "MovedModule",
+            "value": ("urllib_parse", "six.moves.urllib_parse", "urllib.parse")
+        }
+        self.assertEqual(
+            self.compat.lookup("urllib_parse"),
+            expected
+        )
+        expected = {
+            "type": "MovedModule",
+            "value": ("urllib_parse", "six.moves.urllib_parse", "urllib.parse")
+        }
+        self.assertEqual(
+            self.compat.lookup("six.moves.urllib_parse"),
+            expected
+        )
+        expected = {
+            "type": "MovedAttribute",
+            "value": ("cStringIO", "cStringIO", "io", "StringIO")
+
+        }
+        self.assertEqual(
+            self.compat.lookup("six.StringIO"),
+            expected
+        )
