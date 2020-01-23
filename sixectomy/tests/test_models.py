@@ -120,7 +120,8 @@ class TestModules(unittest.TestCase):
         self.assertEqual(self.module.is_using_six(), True)
 
     def test_tokenizer(self):
-        self.assertTrue(isinstance(self.module.before, types.GeneratorType))
+        self.assertTrue(
+            isinstance(self.module.before['tokens'], types.GeneratorType))
         content = [str(el) for el in self.module.before]
         for el in content:
             self.assertTrue('TokenInfo' in el)
@@ -155,11 +156,6 @@ class TestModulesWithoutSix(unittest.TestCase):
         self.assertEqual(self.module.is_using_six(), False)
 
     def test_tokenizer(self):
-        # We don't need to tokenize a module that don't use six
-        # the goal of sixectomy is to replace six occurences
-        # so we can skip to tokenize a module because it's useless
-        # in the next of the treatment and we will allocate ressources
-        # to something that will not be used.
         self.assertTrue(self.module.before['tokens'] is None)
 
 

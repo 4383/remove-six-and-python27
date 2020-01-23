@@ -77,14 +77,8 @@ class Module:
     name = None
     path = None
     refactored = False
-    base = {
-        'is_pep8_valid': False,
-        'tokens': None,
-        'tree': None,
-        'imports': None,
-        'root': None,
-    }
-    before = copy.deepcopy(base)
+    base = None
+    before = None
     # Let's after to none, will be initialized by the surgerer from before
     after = None
 
@@ -94,6 +88,16 @@ class Module:
         @param path: The path of the file or directory to analyze
         @type path: str
         """
+        self.base = {
+            'is_pep8_valid': False,
+            'tokens': None,
+            'tree': None,
+            'imports': None,
+            'root': None,
+        }
+        self.before = copy.deepcopy(self.base)
+        # Let's after to none, will be initialized by the surgerer from before
+        self.after = None
         self.path = path
         self.name = os.path.basename(path)
         self.module_reader = ModuleReader(self.path)
