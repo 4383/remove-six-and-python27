@@ -70,7 +70,7 @@ class TestImports(unittest.TestCase):
             fake.close()
             self.tmpdir = tmpdir
             self.module = Module(os.path.join(self.tmpdir, "test.txt"))
-            self.node = self.module.root
+            self.node = self.module.before['root']
             self.imports = Imports(self.node)
 
     def test_parse_import(self):
@@ -103,7 +103,7 @@ class TestModules(unittest.TestCase):
             self.module = Module(os.path.join(self.tmpdir, "test.txt"))
 
     def test_parse_file(self):
-        self.assertTrue(isinstance(self.module.root, ast.Module))
+        self.assertTrue(isinstance(self.module.before['root'], ast.Module))
 
     def test_name(self):
         self.assertTrue(self.module.name, self.pyfile)
@@ -135,7 +135,7 @@ class TestModulesWithoutSix(unittest.TestCase):
             fake.close()
             self.tmpdir = tmpdir
             self.module = Module(os.path.join(self.tmpdir, "test.txt"))
-            self.node = self.module.root
+            self.node = self.module.before['root']
 
     def test_parse_file(self):
         self.assertTrue(isinstance(self.node, ast.Module))
@@ -155,7 +155,12 @@ class TestModulesWithoutSix(unittest.TestCase):
         self.assertEqual(self.module.is_using_six(), False)
 
     def test_tokenizer(self):
-        self.assertTrue(self.module.before is None)
+        # We don't need to tokenize a module that don't use six
+        # the goal of sixectomy is to replace six occurences
+        # so we can skip to tokenize a module because it's useless
+        # in the next of the treatment and we will allocate ressources
+        # to something that will not be used.
+        self.assertTrue(self.module.before['tokens'] is None)
 
 
 class TestAnalyze(unittest.TestCase):
@@ -183,7 +188,7 @@ class TestAnalyze(unittest.TestCase):
             fake.close()
             self.tmpdir = tmpdir
             self.module = Module(os.path.join(self.tmpdir, "test.txt"))
-            self.node = self.module.root
+            self.node = self.module.before['root']
             self.imports_number = len(self.module.imports)
 
     def get_expected_modules_len(self):

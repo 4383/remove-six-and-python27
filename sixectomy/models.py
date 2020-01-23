@@ -105,6 +105,15 @@ class Module:
         self.before['imports'] = Imports(self.before['root'])
         self._number_of_six_imports()
         if self.is_using_six():
+            # We don't need to tokenize a module that don't use six
+            # the goal of sixectomy is to replace six occurences
+            # so we can skip to tokenize a module because it's useless
+            # in the next of the treatment and we will allocate ressources
+            # to something that will not be used.
+            # Also checking PEP8 on a module which will be not refactored
+            # is useless too, we just want to keep PEP8 compliant a refactored
+            # module who was already PEP8 compliant before the refactor.
+            # We don't want to spend time on useless things.
             self._tokenizer()
             self.before['is_pep8_valid'] = is_pep8_valid(self.path)
 

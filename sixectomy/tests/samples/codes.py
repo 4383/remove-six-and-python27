@@ -27,6 +27,8 @@ without_six = """
 import requests
 import abc
 from foo import bar
+from baz import buz, boom, beh
+from baz import biz as bazbiz
 
 def baz():
     pass

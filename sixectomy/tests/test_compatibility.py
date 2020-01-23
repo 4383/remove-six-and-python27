@@ -349,26 +349,26 @@ expected_extract = [
 ]
 
 expected_evals = [
-    ("cStringIO", "cStringIO", "io", "StringIO"),
-    ("filter", "itertools", "builtins", "ifilter", "filter"),
-    ("filterfalse", "itertools", "itertools", "ifilterfalse", "filterfalse"),
-    ("input", "__builtin__", "builtins", "raw_input", "input"),
+    ("cStringIO", "cStringIO.StringIO", "io.StringIO"),
+    ("filter", "itertools.ifilter", "builtins.filter"),
+    ("filterfalse", "itertools.ifilterfalse", "itertools.filterfalse"),
+    ("input", "__builtin__.raw_input", "builtins.input"),
     ("intern", "__builtin__", "sys"),
-    ("map", "itertools", "builtins", "imap", "map"),
-    ("getcwd", "os", "os", "getcwdu", "getcwd"),
-    ("getcwdb", "os", "os", "getcwd", "getcwdb"),
+    ("map", "itertools.imap", "builtins.map"),
+    ("getcwd", "os.getcwdu", "os.getcwd"),
+    ("getcwdb", "os.getcwd", "os.getcwdb"),
     ("getoutput", "commands", "subprocess"),
-    ("range", "__builtin__", "builtins", "xrange", "range"),
-    ("reload_module", "__builtin__", "importlib", "reload"),
+    ("range", "__builtin__.xrange", "builtins.range"),
+    ("reload_module", "__builtin__.reload", "importlib.reload"),
     ("reduce", "__builtin__", "functools"),
-    ("shlex_quote", "pipes", "shlex", "quote"),
+    ("shlex_quote", "pipes.quote", "shlex.quote"),
     ("StringIO", "StringIO", "io"),
     ("UserDict", "UserDict", "collections"),
     ("UserList", "UserList", "collections"),
     ("UserString", "UserString", "collections"),
-    ("xrange", "__builtin__", "builtins", "xrange", "range"),
-    ("zip", "itertools", "builtins", "izip", "zip"),
-    ("zip_longest", "itertools", "itertools", "izip_longest", "zip_longest"),
+    ("xrange", "__builtin__.xrange", "builtins.range"),
+    ("zip", "itertools.izip", "builtins.zip"),
+    ("zip_longest", "itertools.izip_longest", "itertools.zip_longest"),
     ("builtins", "__builtin__"),
     ("configparser", "ConfigParser"),
     ("collections_abc", "collections", "collections.abc"),
@@ -430,7 +430,7 @@ expected_evals = [
     ("quote_plus", "urllib", "urllib.parse"),
     ("unquote", "urllib", "urllib.parse"),
     ("unquote_plus", "urllib", "urllib.parse"),
-    ("unquote_to_bytes", "urllib", "urllib.parse", "unquote", "unquote_to_bytes"),  # noqa
+    ("unquote_to_bytes", "urllib.unquote", "urllib.parse.unquote_to_bytes"),
     ("urlencode", "urllib", "urllib.parse"),
     ("splitquery", "urllib", "urllib.parse"),
     ("splittag", "urllib", "urllib.parse"),
@@ -541,7 +541,6 @@ class TestCompatibility(unittest.TestCase):
             self.assertEqual(
                 self.compat._mapping[line[0]]["type"],
                 expected_types[index])
-            self.assertEqual(self.compat._mapping[line[0]]["value"], line)
 
     def test_lookup(self):
         expected = {
@@ -588,12 +587,57 @@ class TestCompatibility(unittest.TestCase):
             self.compat.lookup("six.moves.urllib_parse"),
             expected
         )
+        # Now doing some tests over cStringIO which exist with
+        # many bindings
         expected = {
             "type": "MovedAttribute",
-            "value": ("cStringIO", "cStringIO", "io", "StringIO")
-
+            "value": ("cStringIO", "cStringIO.StringIO", "io.StringIO")
+        }
+        self.assertEqual(
+            self.compat.lookup("six.cStringIO"),
+            expected
+        )
+        expected = {
+            "type": "MovedAttribute",
+            "value": ("StringIO", "StringIO", "io")
         }
         self.assertEqual(
             self.compat.lookup("six.StringIO"),
             expected
         )
+        expected = {
+            "type": "MovedAttribute",
+            "value": ("StringIO", "StringIO", "io")
+        }
+        self.assertEqual(
+            self.compat.lookup("six.moves.StringIO"),
+            expected
+        )
+        expected = {
+            "type": "MovedAttribute",
+            "value": ("StringIO", "StringIO", "io")
+        }
+        self.assertEqual(
+            self.compat.lookup("six.moves.io.StringIO"),
+            expected
+        )
+        # Even by looking up for a py2 binding we retrieve the py3 module name
+        expected = {
+            "type": "MovedAttribute",
+            "value": ("StringIO", "StringIO", "io")
+        }
+        self.assertEqual(
+            self.compat.lookup("six.moves.cStringIO.StringIO"),
+            expected
+        )
+
+    def test_get_the_python3_binding(self):
+        got = self.compat.get_the_python3_binding(
+            "six.moves.cStringIO.StringIO")
+        expected = "io"
+        self.assertEqual(got, expected)
+
+        got = self.compat.get_the_python3_binding(
+            "six.moves.cStringIO")
+        expected = "io.StringIO"
+        self.assertEqual(got, expected)
